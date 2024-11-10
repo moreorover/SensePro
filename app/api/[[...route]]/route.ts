@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
 import auth from "./auth";
+import cctv from "./cctv";
 import controller from "./controller";
 import customers from "./customers";
 import devices from "./devices";
@@ -14,6 +15,7 @@ const app = new Hono().basePath("/api");
 
 const routes = app
   .route("/auth", auth)
+  .route("/cctv", cctv)
   .route("/customers", customers)
   .route("/controller", controller)
   .route("/locations", locations)
