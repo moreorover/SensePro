@@ -4,7 +4,9 @@ import { handle } from "hono/vercel";
 import auth from "./auth";
 import controller from "./controller";
 import customers from "./customers";
+import deviceBrands from "./deviceBrands";
 import devices from "./devices";
+import deviceTypes from "./deviceTypes";
 import groups from "./groups";
 import locations from "./locations";
 
@@ -16,8 +18,10 @@ const routes = app
   .route("/auth", auth)
   .route("/customers", customers)
   .route("/controller", controller)
-  .route("/locations", locations)
   .route("/devices", devices)
+  .route("/deviceBrands", deviceBrands)
+  .route("/deviceTypes", deviceTypes)
+  .route("/locations", locations)
   .route("/groups", groups);
 
 export const GET = handle(app);

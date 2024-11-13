@@ -5,34 +5,33 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useOpenDevice } from "@/features/devices/hooks/use-open-device";
+import { useOpenCustomer } from "@/features/customers/hooks/use-open-customer";
 import {
-  useDeleteDevice,
-  useGetDevice,
-  useUpdateDevice,
-} from "@/features/devices/useDevicesApi";
+  useDeleteCustomer,
+  useGetCustomer,
+  useUpdateCustomer,
+} from "@/features/customers/useCustomersApi";
 import { useConfirm } from "@/hooks/use-confirm";
-import { deviceForm } from "@/lib/apiSchema";
+import { createCustomer } from "@/lib/apiSchema";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
-import { DeviceForm } from "./devices-form";
+import { CustomerForm } from "./customers-form";
 
-type FormValues = z.input<typeof deviceForm>;
+type FormValues = z.input<typeof createCustomer>;
 
-export const EditDeviceSheet = () => {
-  const { isOpen, onClose, id } = useOpenDevice();
+export const EditCustomerSheet = () => {
+  const { isOpen, onClose, id } = useOpenCustomer();
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
-    "You are about to delete this device"
+    "You are about to delete this customer"
   );
 
-  const deviceQuery = useGetDevice(id);
-  const editMutation = useUpdateDevice(id);
-  const deleteMutation = useDeleteDevice(id);
+  const customerQuery = useGetCustomer(id);
+  const editMutation = useUpdateCustomer(id);
+  const deleteMutation = useDeleteCustomer(id);
   const isPending = editMutation.isPending || deleteMutation.isPending;
-  const isLoading = deviceQuery.isLoading;
-
+  const isLoading = customerQuery.isLoading;
   const onSubmit = (values: FormValues) => {
     editMutation.mutate(values, {
       onSuccess: () => {
@@ -53,22 +52,12 @@ export const EditDeviceSheet = () => {
     }
   };
 
-  const defaultValues = deviceQuery.data
+  const defaultValues = customerQuery.data
     ? {
-        name: deviceQuery.data.name,
-        mac: deviceQuery.data.mac,
-        ip: deviceQuery.data.ip,
-        deviceTypeId: deviceQuery.data.deviceTypeId,
-        pin: deviceQuery.data.pin,
-        serialNumber: deviceQuery.data.serialNumber,
+        name: customerQuery.data.name,
       }
     : {
         name: "",
-        mac: "",
-        ip: "",
-        deviceTypeId: "",
-        pin: 0,
-        serialNumber: "",
       };
 
   return (
@@ -77,20 +66,20 @@ export const EditDeviceSheet = () => {
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent className="space-y-4">
           <SheetHeader>
-            <SheetTitle>Edit Device</SheetTitle>
-            <SheetDescription>Edit an existing device.</SheetDescription>
+            <SheetTitle>Edit Customer</SheetTitle>
+            <SheetDescription>Edit an existing customer.</SheetDescription>
           </SheetHeader>
           {isLoading ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="size-4 animate-spin text-muted-foreground" />
             </div>
           ) : (
-            <DeviceForm
+            <CustomerForm
               id={id}
               onSubmit={onSubmit}
               disabled={isPending}
-              onDelete={() => onDelete()}
               defaultValues={defaultValues}
+              onDelete={() => onDelete()}
             />
           )}
         </SheetContent>

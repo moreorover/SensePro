@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -5,6 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useGetDeviceBrands } from "@/features/deviceBrands/useDeviceBrandsApi";
 import * as useNewDevice from "@/features/devices/hooks/use-new-device";
 import { deviceForm } from "@/lib/apiSchema";
 import { z } from "zod";
@@ -14,9 +17,16 @@ import { DeviceForm } from "./devices-form";
 type FormValues = z.input<typeof deviceForm>;
 
 export const NewDeviceSheet = () => {
-  const { isOpen, onClose, locationId, groupId, deviceType } =
+  const { isOpen, onClose, locationId, groupId, deviceTypeId } =
     useNewDevice.useNewDevice();
   const mutation = useCreateDevice();
+
+  const deviceBrandsQuery = useGetDeviceBrands();
+
+  const isLoading =
+    deviceBrandsQuery.isLoading || deviceBrandsQuery.isRefetching;
+
+  const deviceBrands = deviceBrandsQuery.data ? deviceBrandsQuery.data : [];
 
   const onSubmit = (values: FormValues) => {
     mutation.mutate(
@@ -24,7 +34,7 @@ export const NewDeviceSheet = () => {
         ...values,
         locationId,
         groupId,
-        deviceType,
+        deviceTypeId,
       },
       {
         onSuccess: () => {
@@ -43,17 +53,23 @@ export const NewDeviceSheet = () => {
             Create a new customer location device.
           </SheetDescription>
         </SheetHeader>
-        <DeviceForm
-          onSubmit={onSubmit}
-          disabled={mutation.isPending}
-          defaultValues={{
-            name: "",
-            mac: "",
-            ip: "",
-            pin: 0,
-            serialNumber: "",
-          }}
-        />
+        {isLoading ? (
+          <>Loading...</>
+        ) : (
+          <DeviceForm
+            onSubmit={onSubmit}
+            disabled={mutation.isPending}
+            defaultValues={{
+              name: "",
+              mac: "",
+              ip: "",
+              pin: 0,
+              serialNumber: "",
+              deviceBrandId: "",
+            }}
+            deviceBrandOptions={deviceBrands}
+          />
+        )}
       </SheetContent>
     </Sheet>
   );

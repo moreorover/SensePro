@@ -1,11 +1,10 @@
-import { DeviceType } from "@prisma/client";
 import { create } from "zustand";
 
 type State = {
   isOpen: boolean;
   locationId?: string;
   groupId?: string;
-  deviceType: DeviceType;
+  deviceTypeId: string;
 };
 
 type Actions = {
@@ -13,13 +12,13 @@ type Actions = {
   onClose: () => void;
   setLocationId: (locationId: string) => void;
   setGroupId: (groupId: string) => void;
-  setDeviceType: (deviceType: DeviceType) => void;
+  setDeviceTypeId: (deviceType: string) => void;
 };
 
 const initialState: State = {
   isOpen: false,
   locationId: undefined,
-  deviceType: DeviceType.Controller,
+  deviceTypeId: "",
 };
 
 export const useNewDevice = create<State & Actions>((set) => ({
@@ -28,5 +27,5 @@ export const useNewDevice = create<State & Actions>((set) => ({
   onClose: () => set(initialState),
   setLocationId: (locationId: string) => set({ locationId }),
   setGroupId: (groupId: string) => set({ groupId }),
-  setDeviceType: (deviceType: DeviceType) => set({ deviceType }),
+  setDeviceTypeId: (deviceTypeId: string) => set({ deviceTypeId }),
 }));

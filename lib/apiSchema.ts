@@ -1,4 +1,3 @@
-import { DeviceType } from "@prisma/client";
 import { z } from "zod";
 
 const customer = z.object({
@@ -16,28 +15,58 @@ const device = z.object({
   ip: z.string(),
   pin: z.number().default(0),
   serialNumber: z.string(),
-
-  deviceType: z.nativeEnum(DeviceType),
+  deviceType: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  deviceBrand: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
   locationId: z.string().optional().nullable(),
   groupId: z.string().optional().nullable(),
 });
 
 export type DeviceShemaType = z.infer<typeof device>;
 
-export const createDevice = device.omit({
-  id: true,
+export const createDevice = device
+  .omit({
+    id: true,
+    deviceType: true,
+    deviceBrand: true,
+  })
+  .extend({
+    deviceTypeId: z.string(),
+    deviceBrandId: z.string().min(1),
+  });
+
+export const updateDevice = device
+  .omit({
+    id: true,
+    locationId: true,
+    deviceType: true,
+  })
+  .extend({
+    deviceTypeId: z.string(),
+    deviceBrandId: z.string(),
+  });
+export const deviceForm = device
+  .omit({
+    id: true,
+    locationId: true,
+    groupId: true,
+    deviceType: true,
+    deviceBrand: true,
+  })
+  .extend({ deviceBrandId: z.string().min(1) });
+
+export const deviceBrand = z.object({
+  id: z.string(),
+  name: z.string(),
 });
-export const updateDevice = device.omit({
-  id: true,
-  locationId: true,
-  deviceType: true,
-});
-export const deviceForm = device.omit({
-  id: true,
-  locationId: true,
-  groupId: true,
-  deviceType: true,
-});
+
+export const createDeviceBrand = deviceBrand.omit({ id: true });
+export const updateDeviceBrand = deviceBrand.omit({ id: true });
 
 export const deviceType = z.object({
   id: z.string(),

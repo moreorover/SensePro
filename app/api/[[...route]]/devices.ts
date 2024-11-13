@@ -77,6 +77,10 @@ const app = new Hono()
         where: {
           locationId: locationId ? locationId : undefined,
         },
+        include: {
+          deviceType: true,
+          deviceBrand: true,
+        },
       });
 
       return c.json(data);
@@ -123,7 +127,7 @@ const app = new Hono()
       },
     });
 
-    sendUpdateConfigMessage(values.groupId);
+    // sendUpdateConfigMessage(values.groupId);
 
     return c.json(data);
   })
@@ -159,7 +163,7 @@ const app = new Hono()
         return c.json({ error: "Not found" }, 404);
       }
 
-      sendUpdateConfigMessage(values.groupId);
+      // sendUpdateConfigMessage(values.groupId);
 
       return c.json(data);
     }
@@ -188,7 +192,7 @@ const app = new Hono()
         return c.json({ error: "Not found" }, 404);
       }
 
-      sendUpdateConfigMessage(data.groupId);
+      // sendUpdateConfigMessage(data.groupId);
 
       return c.json(data);
     }

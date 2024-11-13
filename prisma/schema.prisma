@@ -59,27 +59,35 @@ model Group {
   deviceRules DeviceRules[]
 }
 
-enum DeviceType {
-  Controller
-  NVR
-  CCTV_Camera
-  Detector
+model DeviceBrand {
+  id     String   @id
+  name   String   @unique
+  Device Device[]
+}
+
+model DeviceType {
+  id     String   @id
+  name   String   @unique
+  Device Device[]
 }
 
 model Device {
-  id           String     @id
-  name         String
-  mac          String     @unique
-  ip           String
-  pin          Int
-  serialNumber String     @unique
-  deviceType   DeviceType
-  groupId      String?
-  locationId   String?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime?  @updatedAt
-  location     Location?  @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  group        Group?     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  id            String      @id
+  name          String
+  mac           String      @unique
+  ip            String
+  pin           Int
+  serialNumber  String      @unique
+  deviceBrandId String
+  deviceBrand   DeviceBrand @relation(fields: [deviceBrandId], references: [id])
+  deviceTypeId  String
+  deviceType    DeviceType  @relation(fields: [deviceTypeId], references: [id])
+  groupId       String?
+  locationId    String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
+  location      Location?   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  group         Group?      @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   rules DeviceRules[]
 }
