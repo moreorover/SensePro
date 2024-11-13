@@ -8,17 +8,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { deviceForm } from "@/lib/apiSchema";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { deviceBrand, deviceForm } from "@/lib/apiSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 type FormValues = z.input<typeof deviceForm>;
+type DeviceBrand = z.input<typeof deviceBrand>;
 
 type Props = {
   id?: string;
   defaultValues?: FormValues;
+  deviceBrandOptions: DeviceBrand[];
   onSubmit: (values: FormValues) => void;
   onDelete?: () => void;
   disabled?: boolean;
@@ -27,6 +36,7 @@ type Props = {
 export const DeviceForm = ({
   id,
   defaultValues,
+  deviceBrandOptions,
   onSubmit,
   onDelete,
   disabled,
@@ -59,6 +69,31 @@ export const DeviceForm = ({
                 <Input disabled={disabled} placeholder="Name" {...field} />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="deviceBrandId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Device Brand</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a device brand" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {deviceBrandOptions.map((deviceBrand) => {
+                    return (
+                      <SelectItem key={deviceBrand.id} value={deviceBrand.id}>
+                        {deviceBrand.name}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
             </FormItem>
           )}
         />

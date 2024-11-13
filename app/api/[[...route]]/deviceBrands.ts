@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 
-import { createGroup, updateGroup } from "@/lib/apiSchema";
+import { createDeviceBrand, updateDeviceBrand } from "@/lib/apiSchema";
 import { validateRequest } from "@/lib/auth/validate-request";
 import prisma from "@/lib/prisma";
 import { zValidator } from "@hono/zod-validator";
@@ -8,40 +8,17 @@ import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
 
 const app = new Hono()
-  .get(
-    "/",
-    zValidator(
-      "query",
-      z.object({
-        locationId: z.string().optional(),
-      })
-    ),
-    async (c) => {
-      const { user } = await validateRequest();
+  .get("/", async (c) => {
+    const { user } = await validateRequest();
 
-      if (!user) {
-        return c.json({ error: "Unauthorized" }, 401);
-      }
-
-      const { locationId } = c.req.valid("query");
-
-      const data = await prisma.group.findMany({
-        where: {
-          locationId: locationId ? locationId : undefined,
-        },
-        include: {
-          devices: {
-            include: {
-              deviceBrand: true,
-              deviceType: true,
-            },
-          },
-        },
-      });
-
-      return c.json(data);
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
     }
-  )
+
+    const data = await prisma.deviceBrand.findMany();
+
+    return c.json(data);
+  })
   .get(
     "/:id",
     zValidator("param", z.object({ id: z.string().optional() })),
@@ -57,8 +34,10 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      const data = await prisma.group.findUnique({
-        where: { id: id },
+      const data = await prisma.deviceBrand.findUnique({
+        where: {
+          id: id,
+        },
       });
 
       if (!data) {
@@ -67,8 +46,8 @@ const app = new Hono()
       return c.json(data);
     }
   )
-  .post("/", zValidator("json", createGroup), async (c) => {
-    const values = c.req.valid("json");
+  .post("/", zValidator("json", createDeviceBrand), async (c) => {
+    const values = await c.req.json();
 
     const { user } = await validateRequest();
 
@@ -76,10 +55,10 @@ const app = new Hono()
       return c.json({ error: "Unauthorized" }, 401);
     }
 
-    const data = await prisma.group.create({
+    const data = await prisma.deviceBrand.create({
       data: {
-        ...values,
         id: createId(),
+        ...values,
       },
     });
 
@@ -93,7 +72,7 @@ const app = new Hono()
         id: z.string().optional(),
       })
     ),
-    zValidator("json", updateGroup),
+    zValidator("json", updateDeviceBrand),
     async (c) => {
       const { id } = c.req.valid("param");
       const values = c.req.valid("json");
@@ -108,9 +87,11 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      const data = await prisma.group.update({
+      const data = await prisma.deviceBrand.update({
         where: { id: id },
-        data: { ...values },
+        data: {
+          ...values,
+        },
       });
 
       if (!data) {
@@ -136,8 +117,10 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      const data = await prisma.group.delete({
-        where: { id: id },
+      const data = await prisma.deviceBrand.delete({
+        where: {
+          id: id,
+        },
       });
 
       if (!data) {

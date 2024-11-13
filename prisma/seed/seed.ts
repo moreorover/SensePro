@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { PrismaClient } from "@prisma/client";
-import { customers, locations } from "./data";
+import { customers, deviceBrands, deviceTypes, locations } from "./data";
 
 const prisma = new PrismaClient();
 
@@ -24,6 +24,22 @@ await prisma.user.upsert({
 await prisma.customer.deleteMany({
   where: {},
 });
+
+for (const deviceBrand of deviceBrands) {
+  await prisma.deviceBrand.create({
+    data: {
+      ...deviceBrand,
+    },
+  });
+}
+
+for (const deviceType of deviceTypes) {
+  await prisma.deviceType.create({
+    data: {
+      ...deviceType,
+    },
+  });
+}
 
 for (const customer of customers) {
   await prisma.customer.create({

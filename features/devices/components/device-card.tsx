@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { DeviceShemaType } from "@/lib/apiSchema";
-import { DeviceType } from "@prisma/client";
-import { Cctv, Copy, Radar, TowerControl, Videotape } from "lucide-react";
+import { Copy } from "lucide-react";
 import { DeviceEditButton } from "./device-edit-button";
 
 export const DeviceCard = (props: DeviceShemaType) => {
@@ -20,11 +19,11 @@ export const DeviceCard = (props: DeviceShemaType) => {
         <CardHeader className="flex flex-row items-start bg-muted/50">
           <div className="grid gap-0.5">
             <CardTitle className="group flex items-center gap-2 text-lg">
-              {props.deviceType == DeviceType.Controller && <TowerControl />}
+              {/* {props.deviceType == DeviceType.Controller && <TowerControl />}
               {props.deviceType == DeviceType.CCTV_Camera && <Cctv />}
               {props.deviceType == DeviceType.Detector && <Radar />}
-              {props.deviceType == DeviceType.NVR && <Videotape />}
-              {props.deviceType}
+              {props.deviceType == DeviceType.NVR && <Videotape />} */}
+              {props.deviceType.name}
               <Button
                 size="icon"
                 variant="outline"
@@ -66,12 +65,12 @@ export const DeviceCard = (props: DeviceShemaType) => {
                 <span className="text-muted-foreground">Serial Number</span>
                 <span>{props.serialNumber}</span>
               </li>
-              {props.deviceType != DeviceType.Controller && (
+              {/* {props.deviceType != DeviceType.Controller && (
                 <li className="flex items-center justify-between">
                   <span className="text-muted-foreground">Pin</span>
                   <span>{props.pin > 0 ? props.pin : "Virtual"}</span>
                 </li>
-              )}
+              )} */}
             </ul>
             <Separator className="my-2" />
             <ul className="grid gap-3">
