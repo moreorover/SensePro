@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetDeviceTypes } from "@/features/deviceTypes/useDeviceTypesApi";
 import { DeviceCard } from "@/features/devices/components/device-card";
 import { GroupShemaType } from "@/lib/apiSchema";
@@ -22,31 +16,30 @@ export const GroupCard = (props: GroupShemaType) => {
       {isLoading ? (
         <div>Loading</div>
       ) : (
-        <Card className="col-span-4">
-          <CardHeader className="flex flex-row items-start bg-muted/50">
-            <div className="grid gap-0.5">
-              <CardTitle className="group flex items-center gap-2 text-lg">
-                {props.name}
-              </CardTitle>
-              <CardDescription>Updated: November 23, 2023</CardDescription>
-            </div>
-            <div className="ml-auto flex items-center gap-1">
-              <GroupAddDeviceButton
-                key={props.id}
-                groupId={props.id}
-                locationId={props.locationId}
-                deviceTypes={deviceTypes}
-              />
-              <GroupEditButton
-                id={props.id}
-                deleteDisabled={props.devices.length > 0}
-              />
-            </div>
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex justify-between items-center">
+              <span>{props.name}</span>
+              <div className="space-x-2">
+                <GroupAddDeviceButton
+                  key={props.id}
+                  groupId={props.id}
+                  locationId={props.locationId}
+                  deviceTypes={deviceTypes}
+                />
+                <GroupEditButton
+                  id={props.id}
+                  deleteDisabled={props.devices.length > 0}
+                />
+              </div>
+            </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-4">
-            {props.devices.map((device) => (
-              <DeviceCard key={device.id} {...device} />
-            ))}
+          <CardContent>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {props.devices.map((device) => (
+                <DeviceCard key={device.id} {...device} />
+              ))}
+            </div>
           </CardContent>
         </Card>
       )}
