@@ -33,9 +33,9 @@ export const GroupAddDeviceButton = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" variant="outline" className="size-8 rounded-full">
+          <Button size="sm" variant="outline">
             <Plus className="size-4" />
-            <span className="sr-only">Add new device</span>
+            Add new device
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -46,7 +46,7 @@ export const GroupAddDeviceButton = ({
                 onClick={() => openNewDevice(deviceType.id)}
                 className="flex items-center p-2 cursor-pointer transition-colors hover:bg-accent"
               >
-                Add {deviceType.name}
+                {deviceType.name}
               </DropdownMenuItem>
             );
           })}
