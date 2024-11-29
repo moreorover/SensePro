@@ -45,10 +45,11 @@ export const updateDevice = device
     id: true,
     locationId: true,
     deviceType: true,
+    deviceBrand: true,
   })
   .extend({
     deviceTypeId: z.string(),
-    deviceBrandId: z.string(),
+    deviceBrandId: z.string().min(1),
   });
 export const deviceForm = device
   .omit({

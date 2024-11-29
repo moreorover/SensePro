@@ -23,9 +23,12 @@ const sendUpdateConfigMessage = async (groupId: string | null | undefined) => {
 
     if (groupDevices) {
       groupDevices.devices.forEach((device) => {
-        switch (device.deviceType) {
+        switch (
+          device.deviceTypeId // FIXME update cases as there will never be the in text
+        ) {
           case "Controller":
             controller = device;
+            break;
           case "CCTV_Camera":
             cctv.push(device);
             break;
