@@ -3,6 +3,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ScreenSize } from "@/components/screen-size";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default async function RootLayout({
         <QueryProvider>
           <Toaster />
           {children}
+          {process.env.NODE_ENV === "development" && <ScreenSize />}
         </QueryProvider>
       </body>
     </html>
